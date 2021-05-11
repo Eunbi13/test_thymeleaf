@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="./fragments/frag.html::head">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="./fragments/frag.html::nav"></div>
+	<div th:insert="./fragments/frag.html::jumbo"></div>
+
+	<table class="table table-borderless">
+		<thead>
+			<tr>
+				<th scope="col">num</th>
+				<th scope="col">Title</th>
+				<th scope="col">Contents</th>
+				<th scope="col">Writer</th>
+				<th scope="col">Date</th>
+				<th scope="col">Hit</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="vo : ${list}">
+				<th scope="row" th:text="${vo.num}">1</th>
+				<td> <a th:text="${vo.title}" th:href="select(num=${vo.num})">title</a></td>
+				<td th:text="${vo.contents}">contents</td>
+				<td th:text="${vo.writer}">writer</td>
+				<td th:text="${vo.regDate}">regDate</td>
+				<td th:text="${vo.hit}">hit</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+
+
+	<div th:replace="./fragments/frag.html::footer"></div>
+</body>
+</html>
