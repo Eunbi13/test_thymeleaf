@@ -7,7 +7,32 @@
 <body>
 	<div th:replace="./fragments/frag.html::nav"></div>
 	<div th:insert="./fragments/frag.html::jumbo"></div>
-<div calss="container">
+	
+	<div class="container d-flex justify-content-start">
+			<div class="input-group align-items-center">
+				<form id="frm" th:action="@{list}" class="form-inline">
+					<input type="hidden" name="curPage" value="1" id="curPage">
+					<div class="input-group-prepend">
+						<select class="form-control" name="kind" id="kind"
+							th:value="${pager.kind}">
+							<option class="sel"
+								th:selected="${pager.kind}== 'Title'?true:false">Title</option>
+							<option class="sel"
+								th:selected="${pager.kind}=='Contents'?true:false">Contents</option>
+							<option class="sel"
+								th:selected="${pager.kind}=='Writer'?true:false">Writer</option>
+						</select>
+					</div>
+					<input type="text" class="form-control" name="search" id="search"
+						th:value="${pager.search}" placeholder="">
+					<div class="input-group-append">
+						<button class="btn btn-success" type="submit">Search</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	
+<div class="container">
 	<table class="table table-borderless" style="width: 100%">
 		<thead>
 			<tr>
@@ -29,9 +54,25 @@
 		</tbody>
 	</table>
 </div>
+	<div class="container">
+  <ul class="pagination">
+    <li class="page-item">
+    	<a class="page-link pager"  th:if="${pager.pre}" th:title="${pager.startNum-1}">Previous</a>
+    	<span class="page-link" th:unless="${pager.pre}">Next</span>	
+    </li>
+    <li class="page-item" th:each="i: ${#numbers.sequence(pager.startNum, pager.lastNum)}">
+    	<a class="page-link pager" href="#" th:text="${i}" th:title="${i}"></a></li>
+    
+    <li class="page-item" >
+    	<a class="page-link pager" th:if="${pager.next}" th:title="${pager.lastNum+1}">Next</a>
+   		<span class="page-link" th:unless="${pager.next}">Next</span>	
+    </li>
+  </ul>
+	</div>
 
-
-
+	
 	<div th:replace="./fragments/frag.html::footer"></div>
+	<script type="text/javascript" th:src="@{/js/list.js}"></script>
+	
 </body>
 </html>

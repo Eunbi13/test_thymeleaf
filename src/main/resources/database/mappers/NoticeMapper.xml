@@ -4,17 +4,44 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
     <mapper namespace="com.iu.s1.board.notice.NoticeMapper">
-    	<select id="getList" resultType="NoticeVO">
-	   		select * from
-	   		(select rownum R, N.* from
-	   			(select * from notice order by num desc) N )
-	   		where R between 1 and 10	
+    
+    	<sql id="search">
+    		<where>
+    			<choose>
+    				<when test="#{kind}=='Contents'">
+    					contents like concat('%', #{search}, '%')
+    				</when>
+    				<when test="#{kind}=='Writer'">
+    					writer like concat('%', #{search}, '%')
+    				</when>
+    				<otherwise>
+    					title like concat('%', #{search}, '%')
+    				</otherwise>
+    			</choose>
+    		</where>
+    	</sql>
+    
+    	<select id="getList" parameterType="Pager" resultType="NoticeVO">
+	   		select * from notice 
+	   		<include refid="search"></include>
+	   		order by num desc
+	   		limit #{startRow}, #{perPage}
    		</select>
+   		
+   		<select id="getTotalCount" parameterType="Pager" resultType="java.lang.Long">
+   			select count(num) from notice
+   			<include refid="search"></include>
+   		</select>
+   		
     
     	<select id="getSelect" parameterType="BoardVO" resultType="NoticeVO">
     		select * from notice where num=#{num}
     	</select>
     	
+   		<insert id="setInsert" parameterType="BoardVO">
+   			insert into notice values(null, #{title}, #{writer}, #{contents}, now(), 0)
+   		</insert>
+   		
     	<update id="setUpdate" parameterType="BoardVO">
     		update notice set title=#{title}, contents=#{contents} where num=#{num}
     	</update>
